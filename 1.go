@@ -1,9 +1,13 @@
 package main
 
-import "fmt"
+import (
+    "fmt"
+    "sort"
+)
 
-func main() {
-
-    xs := []int{1, 2, 3, 4, 5}
-
+func main1() {
+    x := []int{3, 1, 2}
+    y := x[:]
+    sort.Ints(x)
+    fmt.Println(y)
 }
