@@ -2,12 +2,14 @@ package main
 
 import (
     "fmt"
-    "sort"
+    "time"
 )
 
-func main1() {
-    x := []int{3, 1, 2}
-    y := x[:]
-    sort.Ints(x)
-    fmt.Println(y)
+func main() {
+    var t *time.Ticker
+
+    select {
+    case <-t.C:
+        fmt.Println("tick")
+    }
 }
