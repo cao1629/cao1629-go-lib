@@ -14,7 +14,7 @@ type Teddy struct {
 func (t *Teddy) StartBarking() {
     fmt.Printf("Teddy is hungry and starts barking!\n")
 
-    // Create a ticker that ticks every second
+    // Create a C that ticks every second
     ticker := time.Tick(1 * time.Second)
 
     for {

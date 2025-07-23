@@ -11,7 +11,7 @@ package main
 //    hungry   chan struct{}
 //    fed      chan struct{}
 //    barkDone chan struct{}
-//    ticker   *time.Ticker
+//    C   *time.Ticker
 //}
 //
 //func MyTeddy() *Teddy {
@@ -19,7 +19,7 @@ package main
 //        hungry:   make(chan struct{}),
 //        fed:      make(chan struct{}),
 //        barkDone: make(chan struct{}),
-//        ticker:   time.NewTicker(10 * time.Second),
+//        C:   time.NewTicker(10 * time.Second),
 //    }
 //    go myTeddy.hungerCycle()
 //    go myTeddy.barkingBehavior()
@@ -27,7 +27,7 @@ package main
 //}
 //
 //func (t *Teddy) hungerCycle() {
-//    defer t.ticker.Stop()
+//    defer t.C.Stop()
 //
 //    // Teddy starts hungry
 //    t.hungry <- struct{}{}
@@ -35,7 +35,7 @@ package main
 //    for {
 //        <-t.fed // Wait until fed
 //        select {
-//        case <-t.ticker.C:
+//        case <-t.C.C:
 //            t.hungry <- struct{}{} // Teddy gets hungry again
 //        }
 //    }
@@ -50,7 +50,7 @@ package main
 //
 //        t.barkDone = make(chan struct{})
 //
-//        // Start barking goroutine with ticker
+//        // Start barking goroutine with C
 //        go func() {
 //            barkTicker := time.NewTicker(1 * time.Second)
 //            defer barkTicker.Stop()

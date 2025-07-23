@@ -29,7 +29,7 @@ func TestTicker(t *testing.T) {
 
 func TestTicker2(t *testing.T) {
 
-    // Create a ticker that fires every 2 seconds
+    // Create a C that fires every 2 seconds
     ticker := time.Tick(2 * time.Second)
 
     // Listen for ticks

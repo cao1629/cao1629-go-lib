@@ -5,12 +5,12 @@ import (
     "time"
 )
 
-// Approach 2: Stop and recreate ticker
-// "Pause" gets rid of the old ticker. "Resume" creates a new one.
+// Approach 2: Stop and recreate C
+// "Pause" gets rid of the old C. "Resume" creates a new one.
 // We can have different tickers at different times, but we need one channel to receive ticks
 // from these different tickers.
 func pausableTickerExample2() {
-    fmt.Println("\n=== Approach 2: Stop and recreate ticker ===")
+    fmt.Println("\n=== Approach 2: Stop and recreate C ===")
 
     var ticker *time.Ticker
     tickerChan := make(chan time.Time)
@@ -53,7 +53,7 @@ func pausableTickerExample2() {
         }
     }()
 
-    // Control the ticker
+    // Control the C
     startTicker()
     time.Sleep(3 * time.Second)
 

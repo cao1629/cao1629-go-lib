@@ -1,67 +1,57 @@
 package main
 
-import "fmt"
+import (
+    "fmt"
+    "time"
+)
 
-type Info struct {
-    name    string
-    age     int
-    address string
+type ElectionTicker struct {
+    timer *time.Timer
+    C     chan time.Time
 }
 
-type BasicInfo struct {
-    name string
-    age  int
+func MakeElectionTicker() *ElectionTicker {
+    et := &ElectionTicker{
+        C: make(chan time.Time),
+    }
+    return et
 }
 
-func GetBasicInfoSlice(infos []Info, start, end int) []BasicInfo {
-    if start < 0 {
-        start = 0
-    }
-    if end > len(infos) {
-        end = len(infos)
-    }
-    if start >= end {
-        return []BasicInfo{}
-    }
-
-    result := make([]BasicInfo, 0, end-start)
-    for i := start; i < end; i++ {
-        result = append(result, BasicInfo{
-            name: infos[i].name,
-            age:  infos[i].age,
-        })
-    }
-    return result
+func (et *ElectionTicker) Reset(interval time.Duration) {
+    et.Stop()
+    et.timer = time.NewTimer(interval)
+    go func() {
+        tick := <-et.timer.C
+        et.C <- tick
+    }()
 }
 
-func PrintBasicInfoSlice(basicInfos []BasicInfo) {
-    fmt.Println("BasicInfo slice:")
-    for i, info := range basicInfos {
-        fmt.Printf("[%d] Name: %s, Age: %d\n", i, info.name, info.age)
+func (et *ElectionTicker) Stop() {
+    if et.timer != nil {
+        et.timer.Stop()
     }
 }
 
 func main() {
-    // Sample data
-    infos := []Info{
-        {name: "Alice Johnson", age: 25, address: "123 Main St"},
-        {name: "Bob Smith", age: 30, address: "456 Oak Ave"},
-        {name: "Charlie Brown", age: 35, address: "789 Pine Rd"},
-        {name: "Diana Prince", age: 28, address: "321 Elm St"},
-        {name: "Eve Wilson", age: 32, address: "654 Maple Ave"},
-    }
+    ticker := MakeElectionTicker()
 
-    // Get a slice of BasicInfo from index 1 to 4
-    basicInfos := GetBasicInfoSlice(infos, 1, 4)
+    go func() {
+        for {
+            select {
+            case <-ticker.C:
+                fmt.Println(time.Now().Format("15:04:05"))
+            }
+        }
+    }()
 
-    // Print the result
-    PrintBasicInfoSlice(basicInfos)
+    go func() {
+        ticker.Reset(time.Second)
+    }()
 
-    // Print original slice for comparison
-    fmt.Println("\nOriginal Info slice:")
-    for i, info := range infos {
-        fmt.Printf("[%d] Name: %s, Age: %d, Address: %s\n", i, info.name, info.age, info.address)
-    }
+    go func() {
+        time.Sleep(3 * time.Second)
+        ticker.Reset(2 * time.Second)
+    }()
 
-    fmt.Printf("%v\n", basicInfos)
+    time.Sleep(10 * time.Second)
 }
