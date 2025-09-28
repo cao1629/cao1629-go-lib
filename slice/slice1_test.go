@@ -42,3 +42,32 @@ func TestSlice1(t *testing.T) {
     copy(nums[1:3], []int{8, 9}) // replaces elements at index 1 and 2
     fmt.Println(nums)            // [1 8 9 4 5]
 }
+
+func TestIterateSlice(t *testing.T) {
+    nums := []int{1, 2, 3, 4, 5}
+    for i, j := range nums {
+        fmt.Println(i, j)
+    }
+}
+
+func TestSlice2(t *testing.T) {
+    a := []int{1, 2, 3, 4, 5}
+    b := []int{100, 101, 102, 103, 104}
+    a = append(a, b...)
+    fmt.Println(a)
+}
+
+func TestSlice3(t *testing.T) {
+    s := make([]int, 10)
+    fmt.Printf("%v\n", s)
+}
+
+func TestVar(t *testing.T) {
+    fn := func(nums ...int) {
+        for n := range nums {
+            fmt.Println(n)
+        }
+    }
+
+    fn(1, 2, 3)
+}
