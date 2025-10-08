@@ -11,8 +11,6 @@ func TestSlice(t *testing.T) {
     copy(s1[:5], []int{1, 2, 3, 4, 5})
     fmt.Println(s1)
 
-    fmt.Println(s1)
-
     s2 := make([]int, 5, 10)
     copy(s2[:5], []int{1, 2, 3, 4, 5})
     s2[0] = 100
@@ -70,4 +68,18 @@ func TestVar(t *testing.T) {
     }
 
     fn(1, 2, 3)
+}
+
+func TestSlice4(t *testing.T) {
+    s := make([]int, 0, 10)
+    fmt.Println(s)
+}
+
+func TestSlice5(t *testing.T) {
+    s := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+    s = append(s[:2], s[7:]...)
+    fmt.Println(s)
+}
+
+func TestSlice6(t *testing.T) {
 }
