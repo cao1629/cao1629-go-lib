@@ -8,7 +8,6 @@ import (
 )
 
 // https://go.dev/blog/pipelines
-
 func gen(nums ...int) <-chan int {
     out := make(chan int)
 
@@ -22,6 +21,7 @@ func gen(nums ...int) <-chan int {
     return out
 }
 
+// square the numbers
 func sq(in <-chan int) <-chan int {
     out := make(chan int)
 
@@ -35,30 +35,21 @@ func sq(in <-chan int) <-chan int {
     return out
 }
 
-func TestBasicPipeline(t *testing.T) {
-
-    res := sq(sq(gen(2, 3, 4)))
-
-    for n := range res {
-        t.Log(n)
-    }
-}
-
+// Fan-in: merge multiple channels into one with WaitGroup
 func merge(cs ...<-chan int) <-chan int {
     out := make(chan int)
     var wg sync.WaitGroup
+    wg.Add(len(cs))
 
-    output := func(c <-chan int) {
-        for n := range c {
-            out <- n
+    drain := func(c <-chan int) {
+        for v := range c {
+            out <- v
         }
         wg.Done()
     }
 
-    wg.Add(len(cs))
-
     for _, c := range cs {
-        go output(c)
+        go drain(c)
     }
 
     go func() {
@@ -84,15 +75,6 @@ func TestFanInFanOut(t *testing.T) {
     for v := range out {
         t.Log(v)
     }
-}
-
-// If "out" is a buffered channel, it will not block. This is one solution, but not good.
-// We can instead use explicit cancellation.
-func TestSenderBlocked(t *testing.T) {
-    out := gen(2, 3)
-    fmt.Println(<-out)
-    // "out" will never be closed
-    return
 }
 
 // explicit cancellation: downstream stages only receive part of values from upstream stages
